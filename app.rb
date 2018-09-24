@@ -37,7 +37,9 @@ get '/' do
 
   status = "cached"
 
-  unless cached == etag
+  if cached
+    data = JSON.parse(cached)
+  else
     status = "live"
 
     doc = Nokogiri::HTML(client.get(BASE_URL).body)
@@ -66,10 +68,10 @@ get '/' do
         authors: authors
       }
     end
-    data = items.to_json
+    data = items
 
-    REDIS.set(etag, data)
+    REDIS.set(etag, data.to_json)
   end
 
-  { status: status, data: data }
+  { status: status, data: data }.to_json
 end
