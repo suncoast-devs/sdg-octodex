@@ -31,15 +31,16 @@ end
 
 get '/' do
   client = HTTPClient.new
-  response = client.head(BASE_URL)
 
-  etag = response.headers['ETag']
+  etag = client.head(BASE_URL).headers['ETag']
   cached = REDIS.get(etag)
 
-  unless cached == etag
-    response = client.get(BASE_URL)
+  status = "cached"
 
-    doc = Nokogiri::HTML(response.body)
+  unless cached == etag
+    status = "live"
+
+    doc = Nokogiri::HTML(client.get(BASE_URL).body)
 
     items = doc.css('.item-shell').map do |item|
       number = item.css('.footer .number').text().gsub('#', '').to_i
@@ -70,5 +71,5 @@ get '/' do
     REDIS.set(etag, data)
   end
 
-  data
+  { status: status, data: data }
 end
