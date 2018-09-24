@@ -42,6 +42,8 @@ get '/' do
     doc = Nokogiri::HTML(response.body)
 
     items = doc.css('.item-shell').map do |item|
+      number = item.css('.footer .number').text().gsub('#', '').to_i
+
       name = item.css('p.purchasable a').text()
 
       image = "#{BASE_URL}#{item.css('.preview-image img')[0]['data-src']}"
@@ -56,6 +58,7 @@ get '/' do
       end
 
       data = {
+        number: number,
         name: name,
         image: image,
         link: link,
