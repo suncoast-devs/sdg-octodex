@@ -1,9 +1,9 @@
-require 'bundler'
+require "bundler"
 
-require 'sinatra'
-require 'nokogiri'
-require 'httpclient'
-require 'redis'
+require "sinatra"
+require "redis"
+require "nokogiri"
+require "httpclient"
 
 BASE_URL = "https://octodex.github.com/"
 
@@ -19,7 +19,7 @@ configure do
 end
 
 before do
-  response.headers['Access-Control-Allow-Origin'] = '*'
+  response.headers["Access-Control-Allow-Origin"] = "*"
 end
 
 options "*" do
@@ -29,10 +29,10 @@ options "*" do
   200
 end
 
-get '/' do
+get "/" do
   client = HTTPClient.new
 
-  etag = client.head(BASE_URL).headers['ETag']
+  etag = client.head(BASE_URL).headers["ETag"]
   cached = REDIS.get(etag)
 
   status = "cached"
@@ -44,19 +44,19 @@ get '/' do
 
     doc = Nokogiri::HTML(client.get(BASE_URL).body)
 
-    items = doc.css('.item-shell').map do |item|
-      number = item.css('.footer .number').text().gsub('#', '').to_i
+    items = doc.css(".post").map do |item|
+      number = item.css("span.pr-1.text-gray").text().gsub("#", "").to_i
 
-      name = item.css('p.purchasable a').text()
+      name = item.css("a.link-gray-dark").text().gsub(/[\n ]/, "")
 
-      image = "#{BASE_URL}#{item.css('.preview-image img')[0]['data-src']}"
+      image = "#{BASE_URL}#{item.css("img.d-block.width-fit.height-auto.rounded-1")[0]["data-src"]}"
 
-      link = "#{BASE_URL}#{item.css('p.purchasable a')[0]['href']}"
+      link = "#{BASE_URL}#{item.css("a.link-gray-dark")[0]["href"]}"
 
-      authors = item.css('.footer > a').map do |author|
+      authors = item.css(".flex-nowrap a").map do |author|
         {
-          link: author['href'],
-          image: author.css('img')[0]['src']
+          link: author["href"],
+          image: author.css("img")[0]["src"],
         }
       end
 
@@ -65,7 +65,7 @@ get '/' do
         name: name,
         image: image,
         link: link,
-        authors: authors
+        authors: authors,
       }
     end
     data = items
@@ -73,5 +73,5 @@ get '/' do
     REDIS.set(etag, data.to_json)
   end
 
-  { status: status, data: data }.to_json
+  {status: status, data: data}.to_json
 end
