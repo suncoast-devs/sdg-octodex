@@ -37,7 +37,7 @@ get "/" do
 
   status = "cached"
 
-  if cached
+  if cached && !params["live"]
     data = JSON.parse(cached)
   else
     status = "live"
