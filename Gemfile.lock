@@ -2,21 +2,21 @@ GEM
   remote: https://rubygems.org/
   specs:
     httpclient (2.8.3)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     mustermann (1.0.3)
-    nokogiri (1.8.4)
-      mini_portile2 (~> 2.3.0)
-    rack (2.0.5)
-    rack-protection (2.0.4)
+    nokogiri (1.10.3)
+      mini_portile2 (~> 2.4.0)
+    rack (2.0.7)
+    rack-protection (2.0.5)
       rack
-    redis (4.0.2)
-    sinatra (2.0.4)
+    redis (4.1.2)
+    sinatra (2.0.5)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.4)
+      rack-protection (= 2.0.5)
       tilt (~> 2.0)
     sinatra-cross_origin (0.4.0)
-    tilt (2.0.8)
+    tilt (2.0.9)
 
 PLATFORMS
   ruby
@@ -29,4 +29,4 @@ DEPENDENCIES
   sinatra-cross_origin
 
 BUNDLED WITH
-   1.16.4
+   1.17.2
