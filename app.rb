@@ -73,5 +73,7 @@ get "/" do
     REDIS.set(etag, data.to_json)
   end
 
+  content_type "application/json"
+
   {status: status, data: data}.to_json
 end
