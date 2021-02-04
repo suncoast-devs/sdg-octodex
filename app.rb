@@ -16,6 +16,7 @@ end
 
 configure do
   enable :cross_origin
+  set :protection, except: [:json_csrf]
 end
 
 before do
